@@ -1,3 +1,4 @@
+# create all namespaces that got requested
 resource "kubernetes_namespace" "namespace" {
   for_each = local.namespaces
   metadata {
@@ -14,11 +15,12 @@ output "namespaces" {
   value = local.namespaces
 }
 
+# create the offical test pod
 resource "kubernetes_pod_v1" "quick_start_pod" {
   metadata {
     name      = "quick-start"
     namespace = var.quick_start_namespace
-    labels    = {
+    labels = {
       "azure.workload.identity/use" = "true"
     }
   }
@@ -43,6 +45,7 @@ resource "kubernetes_pod_v1" "quick_start_pod" {
   ]
 }
 
+# create the service account that will be used for the pod
 resource "kubernetes_service_account_v1" "quick_start_serviceaccount" {
   metadata {
     annotations = {
@@ -53,9 +56,10 @@ resource "kubernetes_service_account_v1" "quick_start_serviceaccount" {
   }
 }
 
-data "azurerm_subscription" "current" {
-}
+data "azurerm_subscription" "current" {}
+data "azurerm_client_config" "current" {}
 
+# create a testing keyvault. the pod will access this keyvault and try to get a secret
 resource "azurerm_key_vault" "quick-start-keyvault" {
   location                  = var.location
   name                      = "mykv-${random_string.my_random_string.result}"
@@ -65,8 +69,8 @@ resource "azurerm_key_vault" "quick-start-keyvault" {
   enable_rbac_authorization = true
 }
 
-data "azurerm_client_config" "current" {}
 
+# set permission for the logged in account and create a secret that will be read by the pod
 resource "azurerm_role_assignment" "allow_keyvault" {
   principal_id         = data.azurerm_client_config.current.object_id
   role_definition_name = "Key Vault Secrets Officer"
@@ -80,8 +84,10 @@ resource "azurerm_key_vault_secret" "quick-start-secret" {
   depends_on   = [azurerm_role_assignment.allow_keyvault]
 }
 
+# set permission for user assigned identity and create secret
 resource "azurerm_role_assignment" "allow_keyvault_for_uai" {
   principal_id         = module.awid.identities["quick-start-sa"].principal_id
-  role_definition_name = "Key Vault Secrets Officer"
+  role_definition_name = "Key Vault Secrets User"
   scope                = azurerm_key_vault.quick-start-keyvault.id
 }
+

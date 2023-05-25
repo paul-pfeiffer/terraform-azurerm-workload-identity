@@ -1,20 +1,26 @@
 variable "identities" {
+  description = "define the identity name as key and the namespace name as value ob the object."
   type = map(object({
     namespace = string
   }))
 }
 
 variable "location" {
-  type = string
+  description = "Location where resources should be created"
+  type        = string
 }
+
 variable "resource_group_name" {
-  type = string
+  description = "Resource group name that in which the identities will be created"
+  type        = string
 }
 
 variable "aks_oidc_issuer_url" {
-  type = string
+  description = "oidc url that the aks cluster returned. Can be retrieved by azurerm_kubernetes_cluster.aks.oidc_issuer_url"
+  type        = string
 }
 
 variable "tags" {
-  type = map(string)
+  description = "any tags that should be created on the resources"
+  type        = map(string)
 }
