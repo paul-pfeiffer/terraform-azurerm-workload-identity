@@ -4,6 +4,8 @@ Azure Kubernetes Cluster Azure workload Identity integration
 User Assigned Managed Identity integration of AzureAD Workload Identity
 Learn more at https://azure.github.io/azure-workload-identity/docs/introduction.html
 
+This module is published in the Terraform Module Registry https://registry.terraform.io/modules/paul-pfeiffer/workload-identity/azurerm/latest
+
 ## Usage
 ```hcl
 module "azure_workload_identity" {
