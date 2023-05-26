@@ -7,8 +7,9 @@ resource "kubernetes_namespace" "namespace" {
 }
 
 locals {
-  namespaces          = toset(values(var.identities).*.namespace)
-  serviceaccount_name = "quick-start-sa"
+  namespaces           = toset(values(var.identities).*.namespace)
+  quick_start_service_account_name = var.identities["quick-start"].service_account_name
+  quick_start_namespace = var.identities["quick-start"].namespace
 }
 
 output "namespaces" {
@@ -19,14 +20,14 @@ output "namespaces" {
 resource "kubernetes_pod_v1" "quick_start_pod" {
   metadata {
     name      = "quick-start"
-    namespace = var.quick_start_namespace
-    labels = {
+    namespace = local.quick_start_namespace
+    labels    = {
       "azure.workload.identity/use" = "true"
     }
   }
 
   spec {
-    service_account_name = local.serviceaccount_name
+    service_account_name = local.quick_start_service_account_name
     container {
       name  = "oidc"
       image = "ghcr.io/azure/azure-workload-identity/msal-go"
@@ -49,10 +50,10 @@ resource "kubernetes_pod_v1" "quick_start_pod" {
 resource "kubernetes_service_account_v1" "quick_start_serviceaccount" {
   metadata {
     annotations = {
-      "azure.workload.identity/client-id" = module.awid.identities["quick-start-sa"].client_id
+      "azure.workload.identity/client-id" = module.awid.identities["quick-start"].client_id
     }
-    name      = local.serviceaccount_name
-    namespace = var.quick_start_namespace
+    name      = local.quick_start_service_account_name
+    namespace = local.quick_start_namespace
   }
 }
 
@@ -86,7 +87,7 @@ resource "azurerm_key_vault_secret" "quick-start-secret" {
 
 # set permission for user assigned identity and create secret
 resource "azurerm_role_assignment" "allow_keyvault_for_uai" {
-  principal_id         = module.awid.identities["quick-start-sa"].principal_id
+  principal_id         = module.awid.identities["quick-start"].principal_id
   role_definition_name = "Key Vault Secrets User"
   scope                = azurerm_key_vault.quick-start-keyvault.id
 }

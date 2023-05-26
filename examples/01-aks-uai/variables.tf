@@ -12,10 +12,6 @@ variable "identities" {
   description = "define the identity name as key and the namespace name as value ob the object."
   type = map(object({
     namespace = string
+    service_account_name = string
   }))
-}
-
-variable "quick_start_namespace" {
-  description = "The name of the quick-start kubernetes namespace"
-  type = string
 }

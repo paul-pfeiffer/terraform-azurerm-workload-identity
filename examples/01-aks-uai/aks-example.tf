@@ -27,8 +27,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 
 module "awid" {
-  source = "../../"
-
+  source = "../.."
+  
   aks_oidc_issuer_url = azurerm_kubernetes_cluster.aks.oidc_issuer_url
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name

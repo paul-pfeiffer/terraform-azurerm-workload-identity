@@ -1,4 +1,4 @@
-# AKS-Azureworkload-id
+# AKS-azure-workload-id
 Azure Kubernetes Cluster Azure workload Identity integration
 
 User Assigned Managed Identity integration of AzureAD Workload Identity
@@ -14,8 +14,9 @@ module "azure_workload_identity" {
   resource_group_name = "mytestrg"
 
   identities = {
-    "quick-start-service-account" = { # kubernetes service account name
-      namespace = "quick-start"       # kubernetes namespace
+    "quick-start" = {
+      service_account_name = "quick-start-service-account" # kubernetes service account name
+      namespace           = "quick-start"                  # kubernetes namespace
     }
   }
 

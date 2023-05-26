@@ -1,14 +1,12 @@
 location = "westeurope"
-name     = "adwi-test"
-tags = {
+tags     = {
   managed-by  = "terraform"
   environment = "sandbox"
 }
 
-quick_start_namespace = "quick-start"
-
 identities = {
-  quick-start-sa = {
-    namespace = "quick-start"
+  quick-start = {
+    service_account_name = "quick-start-sa"
+    namespace            = "quick-start"
   }
 }

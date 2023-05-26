@@ -1,7 +1,8 @@
 variable "identities" {
   description = "define the identity name as key and the namespace name as value ob the object."
-  type = map(object({
-    namespace = string
+  type        = map(object({
+    service_account_name = string
+    namespace           = string
   }))
 }
 

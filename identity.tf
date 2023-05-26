@@ -2,7 +2,7 @@ resource "azurerm_user_assigned_identity" "uai" {
   for_each            = var.identities
   location            = var.location
   resource_group_name = var.resource_group_name
-  name                = each.key
+  name                = each.value.service_account_name
   tags                = var.tags
 }
 
