@@ -6,6 +6,8 @@ Learn more at https://azure.github.io/azure-workload-identity/docs/introduction.
 
 This module is published in the Terraform Module Registry https://registry.terraform.io/modules/paul-pfeiffer/workload-identity/azurerm/latest
 
+Pull Request are Welcome!
+
 ## Usage
 ```hcl
 module "azure_workload_identity" {
